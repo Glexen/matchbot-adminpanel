@@ -6,7 +6,7 @@ export default function Document() {
       <Head />
       <body>
         <header>
-          <a className="aHeader" href='/settings'>Settings</a>
+          <a className="aHeader headerSettings" href='/settings'>Settings</a>
           <a className="aHeader">Reports</a>
           <a className="aHeader">Moderators</a>
           <a className="aHeader">Users</a>
