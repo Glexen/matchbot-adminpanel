@@ -1,9 +1,142 @@
 import { headers } from '@/next.config';
 import settingsStyle from '../styles/Settings.module.css'
 import symbolsStyle from '../styles/Symbols.module.css'
-
+import formConstructorStyle from '../styles/FormConstructor.module.css'
+import React from 'react';
 import { useState, useEffect } from 'react';
 
+
+const FormFields = () => {
+
+    const submitHandler = (e) => {
+        e.preventDefault()
+        const form = e.target;
+        const formData = new FormData(form);
+        
+        const formDataJson = {};
+        for (const [key, value] of formData.entries()) {
+            formDataJson[key] = value;
+        }
+        fetch('http://localhost:3000/api/formField/update', {
+            method: 'PUT',
+            body: JSON.stringify(formDataJson),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })   
+    }
+    
+    const createNewField = (languageProfile) => {
+        fetch('http://localhost:3000/api/formField/clearcreate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({'languageProfileId': languageProfile}),
+        })
+        .then(response => {
+            let form = document.querySelector('#formConstructor')
+            form.submit()
+        })
+        
+    }
+
+    const [formData, setFormData] = useState(false);
+    useEffect(() => {
+      fetch('http://localhost:3000/api/formField/all/1')
+        .then(response => response.json())
+        .then(data => {
+          setFormData(data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }, []);
+  
+    const deleteField = (id) => {
+        fetch(`http://localhost:3000/api/formField/delete/${id}`, {
+            method: 'DELETE',
+            headers: { 
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            let form = document.querySelector('#formConstructor')
+            form.submit()
+        })
+    } 
+
+    return (
+        <form onSubmit={submitHandler} id='formConstructor' className={formConstructorStyle.formConstructor} action="">
+            <p className={formConstructorStyle.title} >Form constructor</p>
+            { formData && (
+                <div className={formConstructorStyle.fields}>
+                    {formData.map((item, index) => (
+                        <div className={formConstructorStyle.field} >
+                            <input
+                                type="text" 
+                                name={`question${item.id}`} 
+                                value={item.question} 
+                                onChange={(event) => {
+                                    const newFormData = [...formData];
+                                    newFormData[index].question = event.target.value;
+                                    setFormData(newFormData);
+                                  }}/>
+                            <input 
+                                type="text" 
+                                name={`nameField${item.id}`} 
+                                value={item.nameField} 
+                                onChange={(event) => {
+                                    const newFormData = [...formData];
+                                    newFormData[index].nameField = event.target.value;
+                                    setFormData(newFormData);
+                                  }}/>
+                            {item.isOptional ? (
+                                <input 
+                                    type="checkbox" 
+                                    name={`isOptional${item.id}`}
+                                    checked 
+                                    value={true}
+                                    onChange={(event) => {
+                                        const newFormData = [...formData];
+                                        newFormData[index].isOptional = false;
+                                        setFormData(newFormData);
+                                    }}/> 
+                            ) : (
+                                <input 
+                                    type="checkbox"
+                                    name={`isOptional${item.id}`} 
+                                    value={false}
+                                    onChange={(event) => {
+                                        const newFormData = [...formData];
+                                        newFormData[index].isOptional = true;
+                                        setFormData(newFormData);
+                                    }} />
+                            )}
+                            <select name={`type${item.id}`} id="">
+                                { item.type === 'text' ? (
+                                    <>
+                                        <option value="text" selected>Text</option>
+                                        <option value="photo">Photo</option>
+                                    </>
+                                ) : (
+                                    <>
+                                        <option value="text" >Text</option>
+                                        <option value="photo" selected>Photo</option>
+                                    </>
+                                )}
+                            </select>
+                            <p onClick={(e) => deleteField(item.id)} className={symbolsStyle.symbolDelete}>􀈑</p>
+                        </div>))}
+                </div>
+            )}
+            <div className={formConstructorStyle.buttonDiv}>
+                <button className={formConstructorStyle.button} onClick={(e) => createNewField(1)}>Add field</button>
+                <button className={formConstructorStyle.button} >Save</button>
+            </div>
+        </form>
+    )
+}
 
 export default function Settings (){
     const [languageProfile, setLanguageProfile] = useState(null);
@@ -50,12 +183,13 @@ export default function Settings (){
                 });
         }
     }, [dataBot]);
+
     useEffect(() => {
         if (dataBot && languageProfile){
             setBotToken(dataBot.botToken)
             setHelloMessage(languageProfile.helloMessage)
             setLike(dataBot.like)
-            setDisLike(dataBot.disLike)
+            setDisLike(dataBot.dislike)
             setReport(dataBot.report)
             setMessage(dataBot.message)
             setAccountSettings(languageProfile.buttonNames.accountSettings)
@@ -65,8 +199,8 @@ export default function Settings (){
             setEditForm(languageProfile.buttonNames.editForm)
             setRestartForm(languageProfile.buttonNames.restartForm)
             setEditFormField(languageProfile.buttonNames.editFormField)
-            setActivateAccount(languageProfile.buttonNames.activateAccount)
-            setDeactivateAccount(languageProfile.buttonNames.deactivateAccount)
+            setActivateAccount(languageProfile.buttonNames.activate)
+            setDeactivateAccount(languageProfile.buttonNames.deactivate)
             setYes(languageProfile.buttonNames.yes)
             setNo(languageProfile.buttonNames.no)
         }
@@ -272,7 +406,7 @@ export default function Settings (){
                         </span>
                         <span className={settingsStyle.inputSpanEmojie}>
                             <p className = {settingsStyle.nameField}>Dislike:</p>
-                            <input defaultValue={dataBot.emojies.disLike} name='disLike' type='text'
+                            <input defaultValue={dataBot.emojies.dislike} name='dislike' type='text'
                             onChange={(e) => setDisLike(e.target.value)}/>
                         </span>
                         <span className={settingsStyle.inputSpanEmojie}>
@@ -340,14 +474,14 @@ export default function Settings (){
                         </span>
                         <span className={settingsStyle.inputSpanButton}>
                             <p className = {settingsStyle.nameField}>Activate account:</p>
-                            <input defaultValue={languageProfile.buttonNames.activateAccount} 
+                            <input defaultValue={languageProfile.buttonNames.activate} 
                             name='activate' 
                             type='text'
                             onChange={(e) => setActivateAccount(e.target.value)}/>
                         </span>
                         <span className={settingsStyle.inputSpanButton}>
                             <p className = {settingsStyle.nameField}>Deactivate account:</p>
-                            <input defaultValue={languageProfile.buttonNames.deactivateAccount} 
+                            <input defaultValue={languageProfile.buttonNames.deactivate} 
                             name='deactivate' 
                             ype='text'
                             onChange={(e) => setDeactivateAccount(e.target.value)}/>
@@ -372,9 +506,9 @@ export default function Settings (){
                 <div className={settingsStyle.inputSubmitDiv}>
                     <input type="submit" value='save' />
                 </div>
-                
             </form>
             )}
+            <FormFields />
         </main>
     )
 }

@@ -26,12 +26,27 @@ input{
   padding: 10px 5px;
   font-size: 18px;
 }
+select{
+  background-color: transparent;
+  border: 1px solid rgba(56, 172, 255, 1);
+  border-radius: 15px;
+  padding: 10px 5px;
+  font-size: 18px;
+}
+input[type="checkbox"]{
+  background-color: transparent;
+  border: 1px solid rgba(56, 172, 255, 1);
+  border-radius: 15px;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+}
 main{
   width: 100vw;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-  flex-direction: column;
+  /* flex-direction: column; */
   min-height: 100vh;
 }
 header{

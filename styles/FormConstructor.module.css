@@ -1,0 +1,44 @@
+.formConstructor{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+    width: 40%;
+    padding-left: 10px;
+}
+.title{
+    font-size: 22px;
+    text-align: center;
+}
+.fields{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+}
+.field{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+.button{
+    cursor: pointer;
+    background: #38ACFF;
+    border: none;
+    border-radius: 15px;
+    width: 30%;
+    height: 30px;
+    text-align: center;
+    color: white;
+    font-size: 18px;
+}
+.buttonDiv{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+}
