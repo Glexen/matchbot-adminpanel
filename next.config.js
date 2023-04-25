@@ -4,3 +4,8 @@ const nextConfig = {
 }
 
 module.exports = nextConfig
+module.exports = {
+  publicRuntimeConfig: {
+    apiUrl: "http://localhost:3000/api"
+  },
+};

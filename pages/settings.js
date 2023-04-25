@@ -1,514 +1,525 @@
-import { headers } from '@/next.config';
-import settingsStyle from '../styles/Settings.module.css'
-import symbolsStyle from '../styles/Symbols.module.css'
-import formConstructorStyle from '../styles/FormConstructor.module.css'
-import React from 'react';
-import { useState, useEffect } from 'react';
+import settingsStyle from "../styles/Settings.module.css";
+import formConstructorStyle from "../styles/FormConstructor.module.css";
+import React from "react";
+import { useState, useEffect } from "react";
+import { Formik, Form, Field } from "formik";
+import getConfig from "next/config";
 
+const { publicRuntimeConfig } = getConfig();
+const { apiUrl } = publicRuntimeConfig;
+
+const Header = () => {
+  return (
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div className="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul className="navbar-nav">
+          <li className="nav-item active">
+            <a className="nav-link" href="#">
+              Settings <span className="sr-only">(current)</span>
+            </a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link" href="#">
+              Reports
+            </a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link" href="#">
+              Moderators
+            </a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link" href="#">
+              Users
+            </a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link" href="#">
+              Ban list
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  );
+};
+
+const SettingField = (props) => {
+  let fetchUrl;
+  let tagName;
+
+  if (!props.staticFetch) {
+    fetchUrl = `${apiUrl}/${props.apiApp}/${props.apiAction}/${props.nameOfValue}`;
+  } else {
+    fetchUrl = `${apiUrl}/${props.apiApp}/${props.apiAction}`;
+  }
+
+  if (props.textarea) {
+    tagName = "textarea";
+  } else {
+    tagName = "input";
+  }
+
+  return (
+    <>
+      <Formik
+        initialValues={{
+          [props.nameOfValue]: props.defaultValue,
+          languageProfileId: 1,
+        }}
+        validate={(values) => {
+          const errors = {};
+          if (!values[props.nameOfValue]) {
+            errors[props.nameOfValue] = "required";
+          } else if (values[props.nameOfValue].length > props.maxLength) {
+            errors[
+              props.nameOfValue
+            ] = `must be ${props.maxLength} characters or less`;
+          }
+          return errors;
+        }}
+        onSubmit={(values, actions) => {
+          fetch(fetchUrl, {
+            method: "PUT",
+            body: JSON.stringify(values),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => {
+              if (response.ok) {
+                const field = document.querySelector(
+                  `${tagName}[name="${props.nameOfValue}"]`
+                );
+                field.classList.add("alert-success");
+                setTimeout(() => {
+                  field.classList.remove("alert-success");
+                }, 500);
+              }
+            })
+            .catch((error) => {
+              const field = document.querySelector(
+                `${tagName}[name="${props.nameOfValue}"]`
+              );
+              field.classList.add("alert-danger");
+              setTimeout(() => {
+                field.classList.remove("alert-danger");
+              }, 500);
+            });
+        }}
+      >
+        {({ errors }) => (
+          <Form className="input-group mb-3">
+            {props.textarea ? (
+              <Field
+                as="textarea"
+                className="form-control"
+                placeholder={props.name}
+                aria-label={props.name}
+                aria-describedby="button-addon2"
+                name={props.nameOfValue}
+              />
+            ) : (
+              <Field
+                type="text"
+                className="form-control"
+                placeholder={props.name}
+                aria-label={props.name}
+                aria-describedby="button-addon2"
+                name={props.nameOfValue}
+              />
+            )}
+            <Field type="hidden" name="languageProfileId" />
+            <div className="input-group-append">
+              <button
+                className="btn btn-outline-secondary"
+                type="submit"
+                id={`button-save-${props.nameOfValue}`}
+              >
+                Save
+              </button>
+            </div>
+            {errors[props.nameOfValue] && (
+              <div
+                className={`alert alert-danger ${settingsStyle.alert}`}
+                role="alert"
+              >
+                {props.name} is {errors[props.nameOfValue]}
+              </div>
+            )}
+          </Form>
+        )}
+      </Formik>
+    </>
+  );
+};
+
+const Buttons = (props) => {
+  return (
+    <div className={settingsStyle.settingsDiv2}>
+      <h4>Buttons:</h4>
+      <SettingField
+        apiApp="languageProfile"
+        apiAction="updateButtonName"
+        name="Account settings"
+        nameOfValue="accountSettings"
+        defaultValue={props.names.accountSettings}
+        maxLength="40"
+      />
+      <SettingField
+        apiApp="languageProfile"
+        apiAction="updateButtonName"
+        name="Menu"
+        nameOfValue="menu"
+        defaultValue={props.names.menu}
+        maxLength="40"
+      />
+      <SettingField
+        apiApp="languageProfile"
+        apiAction="updateButtonName"
+        name="Back"
+        nameOfValue="back"
+        defaultValue={props.names.back}
+        maxLength="40"
+      />
+      <SettingField
+        apiApp="languageProfile"
+        apiAction="updateButtonName"
+        name="Start search"
+        nameOfValue="startSearch"
+        defaultValue={props.names.startSearch}
+        maxLength="40"
+      />
+      <SettingField
+        apiApp="languageProfile"
+        apiAction="updateButtonName"
+        name="Edit form"
+        nameOfValue="editForm"
+        defaultValue={props.names.editForm}
+        maxLength="40"
+      />
+      <SettingField
+        apiApp="languageProfile"
+        apiAction="updateButtonName"
+        name="Restart form"
+        nameOfValue="restartForm"
+        defaultValue={props.names.restartForm}
+        maxLength="40"
+      />
+      <SettingField
+        apiApp="languageProfile"
+        apiAction="updateButtonName"
+        name="Edit form field"
+        nameOfValue="editFormField"
+        defaultValue={props.names.editFormField}
+        maxLength="40"
+      />
+      <SettingField
+        apiApp="languageProfile"
+        apiAction="updateButtonName"
+        name="Activate account"
+        nameOfValue="activate"
+        defaultValue={props.names.activate}
+        maxLength="40"
+      />
+      <SettingField
+        apiApp="languageProfile"
+        apiAction="updateButtonName"
+        name="Deactivate account"
+        nameOfValue="deactivate"
+        defaultValue={props.names.deactivate}
+        maxLength="40"
+      />
+      <SettingField
+        apiApp="languageProfile"
+        apiAction="updateButtonName"
+        name="Yes"
+        nameOfValue="yes"
+        defaultValue={props.names.yes}
+        maxLength="40"
+      />
+      <SettingField
+        apiApp="languageProfile"
+        apiAction="updateButtonName"
+        name="No"
+        nameOfValue="no"
+        defaultValue={props.names.no}
+        maxLength="40"
+      />
+    </div>
+  );
+};
+
+const Emojies = (props) => {
+  return (
+    <>
+      <h4>Emojies:</h4>
+      <SettingField
+        apiApp="botSetting"
+        apiAction="updateEmojie"
+        name="Like"
+        nameOfValue="like"
+        defaultValue={props.values.like}
+        maxLength="10"
+      />
+      <SettingField
+        apiApp="botSetting"
+        apiAction="updateEmojie"
+        name="Dislike"
+        nameOfValue="dislike"
+        defaultValue={props.values.dislike}
+        maxLength="10"
+      />
+      <SettingField
+        apiApp="botSetting"
+        apiAction="updateEmojie"
+        name="Report"
+        nameOfValue="report"
+        defaultValue={props.values.report}
+        maxLength="10"
+      />
+      <SettingField
+        apiApp="botSetting"
+        apiAction="updateEmojie"
+        name="Like + Message"
+        nameOfValue="message"
+        defaultValue={props.values.message}
+        maxLength="10"
+      />
+    </>
+  );
+};
 
 const FormFields = () => {
+  const createNewField = (languageProfile) => {
+    fetch(`${apiUrl}/formField/clearcreate`, {
+      method: "POST",
+      body: JSON.stringify({ languageProfileId: languageProfile }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      getFormData();
+    });
+  };
 
-    const submitHandler = (e) => {
-        e.preventDefault()
-        const form = e.target;
-        const formData = new FormData(form);
-        
-        const formDataJson = {};
-        for (const [key, value] of formData.entries()) {
-            formDataJson[key] = value;
-        }
-        fetch('http://localhost:3000/api/formField/update', {
-            method: 'PUT',
-            body: JSON.stringify(formDataJson),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })   
-    }
-    
-    const createNewField = (languageProfile) => {
-        fetch('http://localhost:3000/api/formField/clearcreate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({'languageProfileId': languageProfile}),
-        })
-        .then(response => {
-            let form = document.querySelector('#formConstructor')
-            form.submit()
-        })
-        
-    }
+  const updateForm = (values) => {
+    fetch(`${apiUrl}/formField/update`, {
+      method: "PUT",
+      body: JSON.stringify(values),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      if (response.ok) {
+        const button = document.querySelector(`#saveFormButton`);
+        button.classList.add("btn-outline-success");
+        button.textContent = "✓";
+        setTimeout(() => {
+          button.textContent = "save";
+          button.classList.remove("btn-outline-success");
+        }, 800);
+      }
+    });
+  };
 
-    const [formData, setFormData] = useState(false);
-    useEffect(() => {
-      fetch('http://localhost:3000/api/formField/all/1')
-        .then(response => response.json())
-        .then(data => {
-          setFormData(data);
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
-    }, []);
-  
-    const deleteField = (id) => {
-        fetch(`http://localhost:3000/api/formField/delete/${id}`, {
-            method: 'DELETE',
-            headers: { 
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => {
-            let form = document.querySelector('#formConstructor')
-            form.submit()
-        })
-    } 
+  const [formData, setFormData] = useState(false);
 
-    return (
-        <form onSubmit={submitHandler} id='formConstructor' className={formConstructorStyle.formConstructor} action="">
-            <p className={formConstructorStyle.title} >Form constructor</p>
-            { formData && (
+  const getFormData = () => {
+    fetch(`${apiUrl}/formField/all/1`)
+      .then((response) => response.json())
+      .then((data) => {
+        const sortedFormData = data.sort((a, b) => a.id - b.id);
+        setFormData(sortedFormData);
+      });
+  };
+  useEffect(() => {
+    getFormData();
+  }, []);
+
+  const deleteField = (id) => {
+    fetch(`${apiUrl}/formField/delete/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      getFormData();
+    });
+  };
+
+  const initialValues = {};
+
+  if (formData) {
+    formData.forEach((item) => {
+      initialValues[`question${item.id}`] = item.question;
+      initialValues[`nameField${item.id}`] = item.nameField;
+      initialValues[`isOptional${item.id}`] = item.isOptional;
+      initialValues[`type${item.id}`] = item.type;
+    });
+  }
+
+  return (
+    <>
+      {formData && (
+        <>
+          <Formik
+            initialValues={{ ...initialValues }}
+            onSubmit={(values, actions) => {
+              updateForm(values);
+            }}
+          >
+            {(formik) => (
+              <Form
+                id="formConstructor"
+                className={formConstructorStyle.formConstructor}
+              >
+                <h4 className={formConstructorStyle.title}>
+                  Form constructor:
+                </h4>
                 <div className={formConstructorStyle.fields}>
-                    {formData.map((item, index) => (
-                        <div className={formConstructorStyle.field} >
-                            <input
-                                type="text" 
-                                name={`question${item.id}`} 
-                                value={item.question} 
-                                onChange={(event) => {
-                                    const newFormData = [...formData];
-                                    newFormData[index].question = event.target.value;
-                                    setFormData(newFormData);
-                                  }}/>
-                            <input 
-                                type="text" 
-                                name={`nameField${item.id}`} 
-                                value={item.nameField} 
-                                onChange={(event) => {
-                                    const newFormData = [...formData];
-                                    newFormData[index].nameField = event.target.value;
-                                    setFormData(newFormData);
-                                  }}/>
-                            {item.isOptional ? (
-                                <input 
-                                    type="checkbox" 
-                                    name={`isOptional${item.id}`}
-                                    checked 
-                                    value={true}
-                                    onChange={(event) => {
-                                        const newFormData = [...formData];
-                                        newFormData[index].isOptional = false;
-                                        setFormData(newFormData);
-                                    }}/> 
-                            ) : (
-                                <input 
-                                    type="checkbox"
-                                    name={`isOptional${item.id}`} 
-                                    value={false}
-                                    onChange={(event) => {
-                                        const newFormData = [...formData];
-                                        newFormData[index].isOptional = true;
-                                        setFormData(newFormData);
-                                    }} />
-                            )}
-                            <select name={`type${item.id}`} id="">
-                                { item.type === 'text' ? (
-                                    <>
-                                        <option value="text" selected>Text</option>
-                                        <option value="photo">Photo</option>
-                                    </>
-                                ) : (
-                                    <>
-                                        <option value="text" >Text</option>
-                                        <option value="photo" selected>Photo</option>
-                                    </>
-                                )}
-                            </select>
-                            <p onClick={(e) => deleteField(item.id)} className={symbolsStyle.symbolDelete}>􀈑</p>
-                        </div>))}
+                  {formData.map((item, index) => (
+                    <div className={formConstructorStyle.field} key={item.id}>
+                      <div className={formConstructorStyle.formRow}>
+                        <div className="col">
+                          <Field
+                            type="text"
+                            name={`question${item.id}`}
+                            className="form-control"
+                            aria-describedby="button-addon2"
+                          />
+                        </div>
+                        <div className="col">
+                          <Field
+                            type="text"
+                            name={`nameField${item.id}`}
+                            className="form-control"
+                            aria-describedby="button-addon2"
+                          />
+                        </div>
+                        <Field
+                          type="checkBox"
+                          name={`isOptional${item.id}`}
+                          className={formConstructorStyle.checkBox}
+                          aria-describedby="button-addon2"
+                          checked={formik.values[`isOptional${item.id}`]}
+                        />
+                        <div
+                          className={`form-group ${formConstructorStyle.selectGroup}`}
+                        >
+                          <Field
+                            as="select"
+                            id={`type${item.id}`}
+                            name={`type${item.id}`}
+                            className="form-control"
+                          >
+                            <option value="Text">Text</option>
+                            <option value="Photo">Photo</option>
+                          </Field>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() => deleteField(item.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  ))}
+                  <div className={formConstructorStyle.buttonDiv}>
+                    <button
+                      type="button"
+                      className="btn btn-outline-success"
+                      onClick={() => createNewField(1)}
+                    >
+                      New field
+                    </button>
+                    <button
+                      id="saveFormButton"
+                      type="submit"
+                      className="btn btn-outline-primary"
+                    >
+                      Save
+                    </button>
+                  </div>
                 </div>
+              </Form>
             )}
-            <div className={formConstructorStyle.buttonDiv}>
-                <button className={formConstructorStyle.button} onClick={(e) => createNewField(1)}>Add field</button>
-                <button className={formConstructorStyle.button} >Save</button>
+          </Formik>
+        </>
+      )}
+    </>
+  );
+};
+
+export default function Settings() {
+  const [languageProfile, setLanguageProfile] = useState(null);
+  const [dataBot, setDataBot] = useState(null);
+
+  useEffect(() => {
+    fetch(`${apiUrl}/botSetting/get`)
+      .then((response) => response.json())
+      .then((data) => {
+        setDataBot(data);
+        fetch(`${apiUrl}/languageProfile/one/1`)
+          .then((response) => response.json())
+          .then((data) => {
+            setLanguageProfile(data);
+          });
+      });
+  }, []);
+
+  return (
+    <main>
+      <Header />
+      {dataBot && languageProfile && (
+        <div className={settingsStyle.mainDiv}>
+          <div className={settingsStyle.settingsDiv}>
+            <div className={settingsStyle.settingsDiv1}>
+              <h4>Main settings:</h4>
+              <SettingField
+                apiApp="botSetting"
+                apiAction="updateBotToken"
+                name="Bot token"
+                nameOfValue="botToken"
+                defaultValue={dataBot.botToken}
+                maxLength="46"
+                staticFetch={true}
+              />
+              <SettingField
+                apiApp="languageProfile"
+                apiAction="updateHelloMessage"
+                name="Hello message"
+                nameOfValue="helloMessage"
+                defaultValue={languageProfile.helloMessage}
+                maxLength="4096"
+                textarea={true}
+                staticFetch={true}
+              />
+              <div className={settingsStyle.languageProfileDiv}>
+                <div className="form-group">
+                  <select
+                    className="form-control"
+                    id="exampleFormControlSelect1"
+                  >
+                    <option>English</option>
+                  </select>
+                </div>
+                <button type="button" className="btn btn-outline-success">
+                  Add new
+                </button>
+                <button type="button" className="btn btn-outline-danger">
+                  Delete current
+                </button>
+              </div>
+              <Emojies values={dataBot.emojies} />
             </div>
-        </form>
-    )
-}
-
-export default function Settings (){
-    const [languageProfile, setLanguageProfile] = useState(null);
-    const [dataBot, setDataBot] = useState(null);
-    const [botToken, setBotToken] = useState('');
-    const [helloMessage, setHelloMessage] = useState('');
-    const [like, setLike] = useState('');
-    const [disLike, setDisLike] = useState('');
-    const [report, setReport] = useState('');
-    const [message, setMessage] = useState('');
-    const [accountSettings, setAccountSettings] = useState('');
-    const [menu, setMenu] = useState('');
-    const [back, setBack] = useState('');
-    const [startSearch, setStartSearch] = useState('');
-    const [editForm, setEditForm] = useState('');
-    const [restartForm, setRestartForm] = useState('');
-    const [editFormField, setEditFormField] = useState('');
-    const [activateAccount, setActivateAccount] = useState('');
-    const [deactivateAccount, setDeactivateAccount] = useState('');
-    const [yes, setYes] = useState('');
-    const [no, setNo] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-    
-    useEffect(() => {
-        fetch('http://localhost:3000/api/botSettings/get')
-            .then(response => response.json())
-            .then(data => {
-                setDataBot(data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }, []);
-
-    useEffect(() => {
-        if (dataBot) {
-            fetch('http://localhost:3000/api/languageProfile/one/1')
-                .then(response => response.json())
-                .then(data => {
-                    setLanguageProfile(data);
-                })
-                .catch(error => {
-                console.error('Error:', error);
-                });
-        }
-    }, [dataBot]);
-
-    useEffect(() => {
-        if (dataBot && languageProfile){
-            setBotToken(dataBot.botToken)
-            setHelloMessage(languageProfile.helloMessage)
-            setLike(dataBot.like)
-            setDisLike(dataBot.dislike)
-            setReport(dataBot.report)
-            setMessage(dataBot.message)
-            setAccountSettings(languageProfile.buttonNames.accountSettings)
-            setMenu(languageProfile.buttonNames.menu)
-            setBack(languageProfile.buttonNames.back)
-            setStartSearch(languageProfile.buttonNames.startSearch)
-            setEditForm(languageProfile.buttonNames.editForm)
-            setRestartForm(languageProfile.buttonNames.restartForm)
-            setEditFormField(languageProfile.buttonNames.editFormField)
-            setActivateAccount(languageProfile.buttonNames.activate)
-            setDeactivateAccount(languageProfile.buttonNames.deactivate)
-            setYes(languageProfile.buttonNames.yes)
-            setNo(languageProfile.buttonNames.no)
-        }
-    }, [dataBot, languageProfile]);
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        if (botToken === '') {
-            setErrorMessage('Please enter bot token');
-            return;
-        }
-
-        else if (helloMessage === '') {
-            setErrorMessage('Please enter hello message');
-            return;
-        }
-
-        else if (like === '') {
-            setErrorMessage('Please enter like emoji');
-            return;
-        }
-
-        else if (disLike === '') {
-            setErrorMessage('Please enter dislike emoji');
-            return;
-        }
-
-        else if (report === '') {
-            setErrorMessage('Please enter report emoji');
-            return;
-        }
-
-        else if (message === '') {
-            setErrorMessage('Please enter like + message emoji');
-            return;
-        }
-
-        else if (accountSettings === '') {
-            setErrorMessage('Please enter name of "Account settings" button');
-            return;
-        }
-
-        else if (menu === '') {
-            setErrorMessage('Please enter name of "Menu" button');
-            return;
-        }
-
-        else if (back === '') {
-            setErrorMessage('Please enter name of "Back" button');
-            return;
-        }
-        
-        else if (startSearch === '') {
-            setErrorMessage('Please enter name of "Start search" button');
-            return;
-        }
-
-        else if (editForm === '') {
-            setErrorMessage('Please enter name of "Edit form" button');
-            return;
-        }
-
-        else if (restartForm === '') {
-            setErrorMessage('Please enter name of "Restart form" button');
-            return;
-        }
-
-        else if (editFormField === '') {
-            setErrorMessage('Please enter name of "Edit form field" button');
-            return;
-        }
-
-        else if (activateAccount === '') {
-            setErrorMessage('Please enter name of "Activate account" button');
-            return;
-        }
-
-        else if (deactivateAccount === '') {
-            setErrorMessage('Please enter name of "Deactivate account" button');
-            return;
-        }
-
-        else if (yes === '') {
-            setErrorMessage('Please enter name of "Yes" button');
-            return;
-        }
-
-        else if (no === '') {
-            setErrorMessage('Please enter name of "No" button');
-            return;
-        }
-
-        else if (accountSettings.length > 40) {
-            setErrorMessage('Length of name of "Account settings" button can`t be more of 40 symbols');
-            return;
-        }
-
-        else if (menu.length > 40) {
-            setErrorMessage('Length of name of "Menu" button can`t be more of 40 symbols');
-            return;
-        }
-
-        else if (back.length > 40) {
-            setErrorMessage('Length of name of "Back" button can`t be more of 40 symbols');
-            return;
-        }
-        
-        else if (startSearch.length > 40) {
-            setErrorMessage('Length of name of "Start search" button can`t be more of 40 symbols');
-            return;
-        }
-
-        else if (editForm.length > 40) {
-            setErrorMessage('Length of name of "Edit form" button can`t be more of 40 symbols');
-            return;
-        }
-
-        else if (restartForm.length > 40) {
-            setErrorMessage('Length of name of "Restart form" button can`t be more of 40 symbols');
-            return;
-        }
-
-        else if (editFormField.length > 40) {
-            setErrorMessage('Length of name of "Edit form field" button can`t be more of 40 symbols');
-            return;
-        }
-
-        else if (activateAccount.length > 40) {
-            setErrorMessage('Length of name of "Activate account" button can`t be more of 40 symbols');
-            return;
-        }
-
-        else if (deactivateAccount.length > 40) {
-            setErrorMessage('Length of name of "Deactivate account" button can`t be more of 40 symbols');
-            return;
-        }
-
-        else if (yes.length > 40) {
-            setErrorMessage('Length of name of "Yes" button can`t be more of 40 symbols');
-            return;
-        }
-
-        else if (no.length > 40) {
-            setErrorMessage('Length of name of "No" button can`t be more of 40 symbols');
-            return;
-        }
-
-        else{
-            const form = e.target;
-            const formData = new FormData(form);
-          
-            const formDataJson = {};
-            for (const [key, value] of formData.entries()) {
-              formDataJson[key] = value;
-            }
-            setErrorMessage('')
-            fetch('/api/settings', {
-                method: 'POST',
-                body: JSON.stringify(formDataJson),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })   
-        }
-    };
-
-    return (
-        <main>
-            {dataBot && languageProfile && (
-            <form onSubmit={handleSubmit} 
-                className={settingsStyle.form}>
-                <span className={settingsStyle.inputSpan}>
-                    <p className = {settingsStyle.nameField}>Bot token:</p>
-                    <input defaultValue={dataBot.botToken} 
-                        type='text' 
-                        name='botToken' 
-                        placeholder="Paste bot token" 
-                        onChange={(e) => setBotToken(e.target.value)}/>
-                </span>
-                <span className={settingsStyle.inputSpan}>
-                    <p className = {settingsStyle.nameField} >Hello message:</p>
-                    <textarea defaultValue={languageProfile.helloMessage} 
-                    placeholder="Write hello message" 
-                    name='helloMessage'
-                    onChange={(e) => setHelloMessage(e.target.value)}></textarea>
-                </span>
-                <span className={settingsStyle.inputSpan}>
-                    <p className = {settingsStyle.nameField}>Language:</p>
-                    <select name='id'>
-                        <option value={1}>English</option>
-                    </select>
-                    <p className={symbolsStyle.symbolPlus}>􀅼</p>
-                    <p className={symbolsStyle.symbolDelete}>􀈑</p>
-                </span>
-                <div className={settingsStyle.extraSettings}>
-                    <div className={settingsStyle.emojiesDiv}>
-                        <h2>Emojies:</h2>
-                        <span className={settingsStyle.inputSpanEmojie}>
-                            <p className = {settingsStyle.nameField}>Like:</p>
-                            <input defaultValue={dataBot.emojies.like} name='like' type='text'
-                            onChange={(e) => setLike(e.target.value)}/>
-                        </span>
-                        <span className={settingsStyle.inputSpanEmojie}>
-                            <p className = {settingsStyle.nameField}>Dislike:</p>
-                            <input defaultValue={dataBot.emojies.dislike} name='dislike' type='text'
-                            onChange={(e) => setDisLike(e.target.value)}/>
-                        </span>
-                        <span className={settingsStyle.inputSpanEmojie}>
-                            <p className = {settingsStyle.nameField}>Like + Message:</p>
-                            <input defaultValue={dataBot.emojies.message} name='message' type='text'
-                            onChange={(e) => setMessage(e.target.value)}/>
-                        </span>
-                        <span className={settingsStyle.inputSpanEmojie}>
-                            <p className = {settingsStyle.nameField}>Report:</p>
-                            <input defaultValue={dataBot.emojies.report} name='report' type='text'
-                            onChange={(e) => setReport(e.target.value)}/>
-                        </span>
-                    </div>
-                    <div className={settingsStyle.buttonsDiv}>
-                        <h2>Buttons:</h2>
-                        <span className={settingsStyle.inputSpanButton}>
-                            <p className = {settingsStyle.nameField}>Account settings:</p>
-                            <input defaultValue={languageProfile.buttonNames.accountSettings} 
-                            name='accountSettings' 
-                            type='text'
-                            onChange={(e) => setAccountSettings(e.target.value)}
-                            />
-                        </span>
-                        <span className={settingsStyle.inputSpanButton}>
-                            <p className = {settingsStyle.nameField}>Menu:</p>
-                            <input defaultValue={languageProfile.buttonNames.menu} 
-                            name='menu' 
-                            type='text'
-                            onChange={(e) => setMenu(e.target.value)}/>
-                        </span>
-                        <span className={settingsStyle.inputSpanButton}>
-                            <p className = {settingsStyle.nameField}>Back:</p>
-                            <input defaultValue={languageProfile.buttonNames.back} 
-                            name='back' 
-                            type='text'
-                            onChange={(e) => setBack(e.target.value)}/>
-                        </span>
-                        <span className={settingsStyle.inputSpanButton}>
-                            <p className = {settingsStyle.nameField}>Start search:</p>
-                            <input defaultValue={languageProfile.buttonNames.startSearch} 
-                            name='startSearch' 
-                            type='text'
-                            onChange={(e) => setStartSearch(e.target.value)}/>
-                        </span>
-                        <span className={settingsStyle.inputSpanButton}>
-                            <p className = {settingsStyle.nameField}>Edit form:</p>
-                            <input defaultValue={languageProfile.buttonNames.editForm} 
-                            name='editForm' 
-                            type='text'
-                            onChange={(e) => setEditForm(e.target.value)}/>
-                        </span>
-                        <span className={settingsStyle.inputSpanButton}>
-                            <p className = {settingsStyle.nameField}>Restart form:</p>
-                            <input defaultValue={languageProfile.buttonNames.restartForm} 
-                            name='restartForm' 
-                            type='text'
-                            onChange={(e) => setRestartForm(e.target.value)}/>
-                        </span>
-                        <span className={settingsStyle.inputSpanButton}>
-                            <p className = {settingsStyle.nameField}>Edit form field:</p>
-                            <input defaultValue={languageProfile.buttonNames.editFormField} 
-                            name='editFormField' 
-                            type='text'
-                            onChange={(e) => setEditFormField(e.target.value)}/>
-                        </span>
-                        <span className={settingsStyle.inputSpanButton}>
-                            <p className = {settingsStyle.nameField}>Activate account:</p>
-                            <input defaultValue={languageProfile.buttonNames.activate} 
-                            name='activate' 
-                            type='text'
-                            onChange={(e) => setActivateAccount(e.target.value)}/>
-                        </span>
-                        <span className={settingsStyle.inputSpanButton}>
-                            <p className = {settingsStyle.nameField}>Deactivate account:</p>
-                            <input defaultValue={languageProfile.buttonNames.deactivate} 
-                            name='deactivate' 
-                            ype='text'
-                            onChange={(e) => setDeactivateAccount(e.target.value)}/>
-                        </span>
-                        <span className={settingsStyle.inputSpanButton}>
-                            <p className = {settingsStyle.nameField}>Yes:</p>
-                            <input defaultValue={languageProfile.buttonNames.yes} 
-                            name='yes' 
-                            type='text'
-                            onChange={(e) => setYes(e.target.value)}/>
-                        </span>
-                        <span className={settingsStyle.inputSpanButton}>
-                            <p className = {settingsStyle.nameField}>No:</p>
-                            <input defaultValue={languageProfile.buttonNames.no} 
-                            name='no' 
-                            type='text'
-                            onChange={(e) => setNo(e.target.value)}/>
-                        </span>
-                    </div>
-                </div>
-                {errorMessage && <p className={settingsStyle.errorText}>{errorMessage}</p>}
-                <div className={settingsStyle.inputSubmitDiv}>
-                    <input type="submit" value='save' />
-                </div>
-            </form>
-            )}
-            <FormFields />
-        </main>
-    )
+            <Buttons names={languageProfile.buttonNames} />
+          </div>
+          <FormFields />
+        </div>
+      )}
+    </main>
+  );
 }

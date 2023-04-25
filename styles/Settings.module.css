@@ -1,110 +1,34 @@
-.form{
+.mainDiv{
+    width: 100%;
+    padding-top: 10px;
+    padding-left: 10px;
     display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    width: 50%;
-    flex-direction: column;
-    padding-left: 20px;
-    gap: 30px;
-    border-right: 2px solid rgba(56, 172, 255, 1);
+    flex-direction: row;
+    justify-content: space-between;
 }
-.inputSpan{
+.languageProfileDiv{
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: row;
     gap: 10px;
-    width: 60%;
-    
 }
-.inputSpan .nameField{
-    font-size: 18px;
-    width: 50%;
-}
-.inputSpan textarea{
-    resize: none;
-    width: 50%;
-    height: 100px;
-    border-radius: 15px;
-    border: solid 1px rgba(56, 172, 255, 1);
-    padding: 10px;
-    font-size: 18px;
-}
-.inputSpan input{
-    padding: 10px;
-    width: 50%;
-}
-.inputSpan select{
-    width: 30%;
-    border-radius: 15px;
-    border: solid 1px rgba(56, 172, 255, 1);
-    padding: 10px;
-    font-size: 18px;
-}
-.extraSettings{
-    width: 100%;
+.settingsDiv{
     display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 10%;
+    width: 50%;
+    flex-direction: row;
+    justify-content: space-between;
 }
-.emojiesDiv {
+.settingsDiv1{
     display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 10px;
+    width: 45%;
     flex-direction: column;
-    width: 30%;
 }
-.emojiesDiv .inputSpanEmojie{
+.settingsDiv2{
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 5%;
-    width: 100%;
-}
-.inputSpanEmojie .nameField{
-    width: 50%;
-    font-size: 18px;
-}
-.inputSpanEmojie input{
-    width: 20px;
-    height: 20px;
-    padding: 5px;
-}
-.buttonsDiv{
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 10px;
+    width: 45%;
     flex-direction: column;
-    width: 50%;
 }
-.inputSpanButton{
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 5%;
-    width: 100%;
-}
-.inputSpanButton .nameField{
-    width: 50%;
-    font-size: 18px;
-}
-.errorText{
-    font-size: 20px;
-    width: 100%;
-    text-align: center;
-    color: red;
-}
-.inputSubmitDiv{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.inputSubmitDiv input{
-    background-color: rgba(56, 172, 255, 1);
-    width: 150px;
-    font-size: 20px;
-    color: white;
+.alert{
+    width: 375px;
 }
