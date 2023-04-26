@@ -4,8 +4,8 @@ export default function Auth(){
         <main>
             <form className={styles.authForm}>
                 <h1>Auth page</h1>
-                <input type = 'text' placeholder="login"/>
-                <input type = 'password' placeholder="password"/>
+                <input type = "text" placeholder="login"/>
+                <input type = "password" placeholder="password"/>
             </form>
         </main>
     )
