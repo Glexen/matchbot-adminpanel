@@ -8,6 +8,8 @@ import getConfig from "next/config";
 const { publicRuntimeConfig } = getConfig();
 const { apiUrl } = publicRuntimeConfig;
 
+
+
 const Header = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">

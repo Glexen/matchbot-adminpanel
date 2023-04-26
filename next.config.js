@@ -4,8 +4,12 @@ const nextConfig = {
 }
 
 module.exports = nextConfig
+
+const apiUrl = "http://localhost:3000/api"
+const apiVersion = 'v1'
+
 module.exports = {
   publicRuntimeConfig: {
-    apiUrl: "http://localhost:3000/api"
+    apiUrl: `${apiUrl}/${apiVersion}`,
   },
 };
