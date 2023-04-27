@@ -35,3 +35,9 @@ textarea{
 nav{
   width: 100%;
 }
+.fade{
+  display: none!important;
+}
+.active{
+  display: flex!important;
+}

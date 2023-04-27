@@ -1,34 +1,31 @@
-.mainDiv{
-    width: 100%;
+.contentDiv{
+    width: 80%;
     padding-top: 10px;
     padding-left: 10px;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
+}
+.mainDiv{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    padding-top: 10px;
 }
 .languageProfileDiv{
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: flex-start;
     flex-direction: row;
     gap: 10px;
 }
 .settingsDiv{
     display: flex;
-    width: 50%;
-    flex-direction: row;
-    justify-content: space-between;
-}
-.settingsDiv1{
-    display: flex;
-    width: 45%;
     flex-direction: column;
+    width: 60%;
 }
-.settingsDiv2{
-    display: flex;
-    width: 45%;
-    flex-direction: column;
-}
+
 .alert{
     width: 375px;
 }

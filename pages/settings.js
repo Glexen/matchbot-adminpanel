@@ -8,7 +8,63 @@ import getConfig from "next/config";
 const { publicRuntimeConfig } = getConfig();
 const { apiUrl } = publicRuntimeConfig;
 
-
+const Navbar = () => {
+  return (
+    <div className="col-3">
+      <div
+        className="nav flex-column nav-pills"
+        id="Tab"
+        role="tablist"
+        aria-orientation="vertical"
+      >
+        <a
+          className="nav-link active"
+          id="mainSettingsTab"
+          data-toggle="pill"
+          href="#mainSettings"
+          role="tab"
+          aria-controls="mainSettings"
+          aria-selected="true"
+        >
+          Main settings
+        </a>
+        <a
+          className="nav-link"
+          id="buttonsTab"
+          data-toggle="pill"
+          href="#buttons"
+          role="tab"
+          aria-controls="buttons"
+          aria-selected="false"
+        >
+          Buttons
+        </a>
+        <a
+          className="nav-link"
+          id="formConstructorTab"
+          data-toggle="pill"
+          href="#formConstructor"
+          role="tab"
+          aria-controls="formConstructor"
+          aria-selected="false"
+        >
+          Form constructor
+        </a>
+        <a
+          className="nav-link"
+          id="emojiesTab"
+          data-toggle="pill"
+          href="#emojies"
+          role="tab"
+          aria-controls="emojies"
+          aria-selected="false"
+        >
+          Emojies
+        </a>
+      </div>
+    </div>
+  );
+};
 
 const Header = () => {
   return (
@@ -158,11 +214,16 @@ const SettingField = (props) => {
 
 const Buttons = (props) => {
   return (
-    <div className={settingsStyle.settingsDiv2}>
+    <div
+      className={`${settingsStyle.settingsDiv} tab-pane fade`}
+      id="buttons"
+      role="tabpanel"
+      aria-labelledby="buttonsTab"
+    >
       <h4>Buttons:</h4>
       <SettingField
         apiApp="languageProfile"
-        apiAction="updateButtonName"
+        apiAction="buttonName"
         name="Account settings"
         nameOfValue="accountSettings"
         defaultValue={props.names.accountSettings}
@@ -170,7 +231,7 @@ const Buttons = (props) => {
       />
       <SettingField
         apiApp="languageProfile"
-        apiAction="updateButtonName"
+        apiAction="buttonName"
         name="Menu"
         nameOfValue="menu"
         defaultValue={props.names.menu}
@@ -178,7 +239,7 @@ const Buttons = (props) => {
       />
       <SettingField
         apiApp="languageProfile"
-        apiAction="updateButtonName"
+        apiAction="buttonName"
         name="Back"
         nameOfValue="back"
         defaultValue={props.names.back}
@@ -186,7 +247,7 @@ const Buttons = (props) => {
       />
       <SettingField
         apiApp="languageProfile"
-        apiAction="updateButtonName"
+        apiAction="buttonName"
         name="Start search"
         nameOfValue="startSearch"
         defaultValue={props.names.startSearch}
@@ -194,7 +255,7 @@ const Buttons = (props) => {
       />
       <SettingField
         apiApp="languageProfile"
-        apiAction="updateButtonName"
+        apiAction="buttonName"
         name="Edit form"
         nameOfValue="editForm"
         defaultValue={props.names.editForm}
@@ -202,7 +263,7 @@ const Buttons = (props) => {
       />
       <SettingField
         apiApp="languageProfile"
-        apiAction="updateButtonName"
+        apiAction="buttonName"
         name="Restart form"
         nameOfValue="restartForm"
         defaultValue={props.names.restartForm}
@@ -210,7 +271,7 @@ const Buttons = (props) => {
       />
       <SettingField
         apiApp="languageProfile"
-        apiAction="updateButtonName"
+        apiAction="buttonName"
         name="Edit form field"
         nameOfValue="editFormField"
         defaultValue={props.names.editFormField}
@@ -218,7 +279,7 @@ const Buttons = (props) => {
       />
       <SettingField
         apiApp="languageProfile"
-        apiAction="updateButtonName"
+        apiAction="buttonName"
         name="Activate account"
         nameOfValue="activate"
         defaultValue={props.names.activate}
@@ -226,7 +287,7 @@ const Buttons = (props) => {
       />
       <SettingField
         apiApp="languageProfile"
-        apiAction="updateButtonName"
+        apiAction="buttonName"
         name="Deactivate account"
         nameOfValue="deactivate"
         defaultValue={props.names.deactivate}
@@ -234,7 +295,7 @@ const Buttons = (props) => {
       />
       <SettingField
         apiApp="languageProfile"
-        apiAction="updateButtonName"
+        apiAction="buttonName"
         name="Yes"
         nameOfValue="yes"
         defaultValue={props.names.yes}
@@ -242,7 +303,7 @@ const Buttons = (props) => {
       />
       <SettingField
         apiApp="languageProfile"
-        apiAction="updateButtonName"
+        apiAction="buttonName"
         name="No"
         nameOfValue="no"
         defaultValue={props.names.no}
@@ -254,11 +315,16 @@ const Buttons = (props) => {
 
 const Emojies = (props) => {
   return (
-    <>
+    <div
+      className={`${settingsStyle.settingsDiv} tab-pane fade`}
+      id="emojies"
+      role="tabpanel"
+      aria-labelledby="emojiesTab"
+    >
       <h4>Emojies:</h4>
       <SettingField
         apiApp="botSetting"
-        apiAction="updateEmojie"
+        apiAction="emojies"
         name="Like"
         nameOfValue="like"
         defaultValue={props.values.like}
@@ -266,7 +332,7 @@ const Emojies = (props) => {
       />
       <SettingField
         apiApp="botSetting"
-        apiAction="updateEmojie"
+        apiAction="emojies"
         name="Dislike"
         nameOfValue="dislike"
         defaultValue={props.values.dislike}
@@ -274,7 +340,7 @@ const Emojies = (props) => {
       />
       <SettingField
         apiApp="botSetting"
-        apiAction="updateEmojie"
+        apiAction="emojies"
         name="Report"
         nameOfValue="report"
         defaultValue={props.values.report}
@@ -282,19 +348,19 @@ const Emojies = (props) => {
       />
       <SettingField
         apiApp="botSetting"
-        apiAction="updateEmojie"
+        apiAction="emojies"
         name="Like + Message"
         nameOfValue="message"
         defaultValue={props.values.message}
         maxLength="10"
       />
-    </>
+    </div>
   );
 };
 
 const FormFields = () => {
   const createNewField = (languageProfile) => {
-    fetch(`${apiUrl}/formField/clearcreate`, {
+    fetch(`${apiUrl}/formField`, {
       method: "POST",
       body: JSON.stringify({ languageProfileId: languageProfile }),
       headers: {
@@ -306,7 +372,7 @@ const FormFields = () => {
   };
 
   const updateForm = (values) => {
-    fetch(`${apiUrl}/formField/update`, {
+    fetch(`${apiUrl}/formField/1`, {
       method: "PUT",
       body: JSON.stringify(values),
       headers: {
@@ -328,7 +394,7 @@ const FormFields = () => {
   const [formData, setFormData] = useState(false);
 
   const getFormData = () => {
-    fetch(`${apiUrl}/formField/all/1`)
+    fetch(`${apiUrl}/formField/1`)
       .then((response) => response.json())
       .then((data) => {
         const sortedFormData = data.sort((a, b) => a.id - b.id);
@@ -340,7 +406,7 @@ const FormFields = () => {
   }, []);
 
   const deleteField = (id) => {
-    fetch(`${apiUrl}/formField/delete/${id}`, {
+    fetch(`${apiUrl}/formField/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -373,8 +439,10 @@ const FormFields = () => {
           >
             {(formik) => (
               <Form
+                className={`${formConstructorStyle.formConstructor} tab-pane fade`}
                 id="formConstructor"
-                className={formConstructorStyle.formConstructor}
+                role="tabpanel"
+                aria-labelledby="formConstructorTab"
               >
                 <h4 className={formConstructorStyle.title}>
                   Form constructor:
@@ -460,11 +528,18 @@ export default function Settings() {
   const [dataBot, setDataBot] = useState(null);
 
   useEffect(() => {
-    fetch(`${apiUrl}/botSetting/get`)
+    $("#Tab a").on("click", function (e) {
+      e.preventDefault();
+      $(this).tab("show");
+    });
+  }, []);
+
+  useEffect(() => {
+    fetch(`${apiUrl}/botSetting`)
       .then((response) => response.json())
       .then((data) => {
         setDataBot(data);
-        fetch(`${apiUrl}/languageProfile/one/1`)
+        fetch(`${apiUrl}/languageProfile/1`)
           .then((response) => response.json())
           .then((data) => {
             setLanguageProfile(data);
@@ -475,14 +550,20 @@ export default function Settings() {
   return (
     <main>
       <Header />
-      {dataBot && languageProfile && (
-        <div className={settingsStyle.mainDiv}>
-          <div className={settingsStyle.settingsDiv}>
-            <div className={settingsStyle.settingsDiv1}>
+      <div className={settingsStyle.mainDiv}>
+        <Navbar />
+        {dataBot && languageProfile && (
+          <div className={settingsStyle.contentDiv}>
+            <div
+              id="mainSettings"
+              role="tabpanel"
+              aria-labelledby="mainSettingsTab"
+              className={`${settingsStyle.settingsDiv} tab-pane fade show active`}
+            >
               <h4>Main settings:</h4>
               <SettingField
                 apiApp="botSetting"
-                apiAction="updateBotToken"
+                apiAction="botToken"
                 name="Bot token"
                 nameOfValue="botToken"
                 defaultValue={dataBot.botToken}
@@ -491,7 +572,7 @@ export default function Settings() {
               />
               <SettingField
                 apiApp="languageProfile"
-                apiAction="updateHelloMessage"
+                apiAction="helloMessage/1"
                 name="Hello message"
                 nameOfValue="helloMessage"
                 defaultValue={languageProfile.helloMessage}
@@ -515,13 +596,13 @@ export default function Settings() {
                   Delete current
                 </button>
               </div>
-              <Emojies values={dataBot.emojies} />
             </div>
             <Buttons names={languageProfile.buttonNames} />
+            <Emojies values={dataBot.emojies} />
+            <FormFields />
           </div>
-          <FormFields />
-        </div>
-      )}
+        )}
+      </div>
     </main>
   );
 }
