@@ -3,10 +3,12 @@ const nextConfig = {
   reactStrictMode: true,
 }
 
+require("dotenv").config()
+
 module.exports = nextConfig
 
-const apiUrl = "http://localhost:3000/api"
-const apiVersion = "v1"
+const apiUrl = process.env.API_URL
+const apiVersion = process.env.API_VERSION
 
 module.exports = {
   publicRuntimeConfig: {
