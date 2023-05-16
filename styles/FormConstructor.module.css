@@ -1,0 +1,48 @@
+.field{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    width: 90%;
+    gap: 10px;
+}
+.fields{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.formConstructor{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+
+    
+}
+.checkBox{
+    width: 30px;
+    height: 30px;
+    padding-right: 10px;
+}
+.formRow{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+.selectGroup{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0;
+}
+.buttonDiv{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 90%;
+    padding-left: 15px;
+    gap: 20px;
+}
+.title{
+    padding-left: 15px;
+}

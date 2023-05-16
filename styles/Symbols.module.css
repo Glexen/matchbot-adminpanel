@@ -1,0 +1,12 @@
+.symbolPlus{
+    cursor: pointer;
+    font-family: "SF-Pro";
+    color: #38ACFF;
+    font-size: 28px;
+}
+.symbolDelete{
+    cursor: pointer;
+    font-family: "SF-Pro";
+    color: #EC2626;;
+    font-size: 28px;
+}
